@@ -41,6 +41,7 @@ class IRAuth(IRFilter):
             allowed_headers=[],
             allowed_request_headers=[],
             allowed_authorization_headers=[],
+            additional_allowed_authorization_client_headers=[],
             hosts={},
             type=type,
             **kwargs,
@@ -165,6 +166,7 @@ class IRAuth(IRFilter):
         self.__to_header_list("allowed_headers", module)
         self.__to_header_list("allowed_request_headers", module)
         self.__to_header_list("allowed_authorization_headers", module)
+        self.__to_header_list("additional_allowed_authorization_client_headers", module)
 
         if self["proto"] not in ["grpc", "http"]:
             self.post_error(

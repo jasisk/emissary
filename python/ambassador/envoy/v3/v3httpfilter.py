@@ -246,6 +246,7 @@ end
 
     elif auth.proto == "http":
         allowed_authorization_headers = []
+        allowed_authorization_client_headers = []
         headers_to_add = []
 
         for k, v in auth.get("add_auth_headers", {}).items():
@@ -256,8 +257,13 @@ end
                 }
             )
 
-        for key in list(set(auth.allowed_authorization_headers).union(AllowedAuthorizationHeaders)):
+        allowed_authorization_headers_set = set(auth.allowed_authorization_headers).union(AllowedAuthorizationHeaders)
+
+        for key in list(allowed_authorization_headers_set):
             allowed_authorization_headers.append({"exact": key, "ignore_case": True})
+
+        for key in list(set(auth.additional_allowed_authorization_client_headers).union(allowed_authorization_headers_set)):
+            allowed_authorization_client_headers.append({"exact": key, "ignore_case": True})
 
         allowed_request_headers = []
 
@@ -293,7 +299,7 @@ end
                         },
                         "allowed_client_headers": {
                             "patterns": sorted(
-                                allowed_authorization_headers, key=header_pattern_key
+                                allowed_authorization_client_headers, key=header_pattern_key
                             )
                         },
                     },
